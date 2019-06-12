@@ -34,7 +34,8 @@
     jre ==> * 1   /usr/lib/jre-oracle/bin/java                     1         manual mode
               2   /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      manual mode        
 
-    cd /dist
+        cd /dist
+	
 	tar -zxvf cardservproxy.tar.gz
 	mv cardservproxy /usr/local/csp
 	
