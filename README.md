@@ -5,7 +5,7 @@
   apt-get update
 	apt-get install ant subversion        
   cd /tmp        
-  baixar o arquivo "https://www.oracle.com/technetwork/pt/java/javase/downloads/jdk8*
+  baixar o arquivo "https://www.oracle.com/technetwork/pt/java/javase/downloads/jre8-downloads-2133155.html"
   enviar para a pasta /tmp jre-8u211-linux-x64.tar.gz com filezilla ou outro        
   tar -xvzf jre-8u211-linux-x64.tar.gz
   mkdir jre-oracle
