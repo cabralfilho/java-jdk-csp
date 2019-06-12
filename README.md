@@ -40,9 +40,10 @@
 	tar -zxvf cardservproxy.tar.gz
 	mv cardservproxy /usr/local/csp
 	rm -rf /usr/local/csp/*
+	cd /usr/local/
 	git clone https://github.com/cabralfilho/java-jdk-csp.git
+	cd  java-jdk-csp
 	tar -zxvf csp.tar.gz
-	mv csp/* usr/local/csp
 
     nano /etc/rc.local
     Linhas para inclusão no arquivo rc.local	
