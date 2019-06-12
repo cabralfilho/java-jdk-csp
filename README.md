@@ -19,37 +19,37 @@
 	cd cspsvn
 	svn co http://streamboard.tv/svn/CSP/trunk CSP-svn
 	cd CSP-svn
-        update-alternatives --config jav
-Selection         Path                                            Priority   Status
-selecione  ------------------------------------------------------------
-jdk ==> * 0       /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      auto mode
+        update-alternatives --config java
+       Selection         Path                                            Priority   Status
+          selecione  ------------------------------------------------------------
+    jdk ==> * 0       /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      auto mode
           1       /usr/lib/jre-oracle/bin/java                     1         manual mode
           2       /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      manual mode 
 	
         ant tar-app
         update-alternatives --config java
- Selection        Path                                            Priority   Status
- selecione     ------------------------------------------------------------
+      Selection        Path                                            Priority   Status
+         selecione     ------------------------------------------------------------
               0   /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      auto mode
     jre ==> * 1   /usr/lib/jre-oracle/bin/java                     1         manual mode
               2   /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      manual mode        
 
- cd /dist
+    cd /dist
 	tar -zxvf cardservproxy.tar.gz
 	mv cardservproxy /usr/local/csp
 	
 
-nano /etc/rc.local
-Linhas para inclusão no arquivo rc.local	
+    nano /etc/rc.local
+    Linhas para inclusão no arquivo rc.local	
 
 	cd /usr/local/csp
 	./cardproxy.sh start
 	chown root:syslog /var/log
 	exit 0
 	
- Salve o arquivo utilizando "ctrl+x"
+      Salve o arquivo utilizando "ctrl+x"
 
-Inicializando a CSP, execute os comandos abaixo na ordem
+      Inicializando a CSP, execute os comandos abaixo na ordem
 
 	cd /usr/local/csp
        
