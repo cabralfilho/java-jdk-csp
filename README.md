@@ -1,7 +1,7 @@
      ############################Tutorial para Instalação da CSP######################### 
         apt-get update
         apt-get install python-software-properties software-properties-common
-        apt-get install default-jdk
+        apt-get install default-jdk -y
         apt-get update
         apt-get install ant subversion        
         cd /tmp
@@ -11,9 +11,6 @@
         # wget -O - http://debian.opennms.org/OPENNMS-GPG-KEY | sudo apt-key add -
         Atualize o índice do pacote:
         # sudo apt-get update
-        Instale o pacote oracle-java8-unlimited-jce-policy deb:
-        # sudo apt-get install oracle-java8-unlimited-jce-policy
-
         baixar o arquivo "https://www.oracle.com/technetwork/pt/java/javase/downloads/jre8-downloads-2133155.html"
         enviar para a pasta /tmp jre-8u211-linux-x64.tar.gz com filezilla ou outro        
         tar -xvzf jre-8u211-linux-x64.tar.gz
