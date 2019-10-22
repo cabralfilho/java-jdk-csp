@@ -4,21 +4,12 @@
         apt-get install default-jdk -y
         apt-get update
         apt-get install ant subversion        
-        cd /tmp
-	Adicione a seguinte linha ao /etc/apt/sources.list:
-        deb http://debian.opennms.org/ stable main
-        Instale a chave GPG do repositório:
-        # wget -O - http://debian.opennms.org/OPENNMS-GPG-KEY | sudo apt-key add -
-        Atualize o índice do pacote:
-        # sudo apt-get update
         baixar o arquivo "https://www.oracle.com/technetwork/pt/java/javase/downloads/jre8-downloads-2133155.html"
         enviar para a pasta /tmp jre-8u211-linux-x64.tar.gz com filezilla ou outro        
-        tar -xvzf jre-8u211-linux-x64.tar.gz
-        mkdir jre-oracle
-        mv jre1.8.0_211  jre1
-	mv jre1/* jre-oracle
-        rm -rf jre1
-	sudo mv jre-oracle/ /usr/lib
+        cd /tmp
+	tar -xvzf jre-8u211-linux-x64.tar.gz        
+	mv o jre**** /  jre-oracle
+        sudo mv jre-oracle/ /usr/lib
         sudo update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jre-oracle/bin/java" 1
         sudo update-alternatives --set java /usr/lib/jre-oracle/bin/java        
         cd /lib
