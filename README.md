@@ -4,7 +4,7 @@
         apt-get install default-jdk -y
         apt-get update
         apt-get install ant subversion        
-        baixar o arquivo https://download1321/3drbcf8sff7g/nxd93l5f9d05oz7/jdk.rar
+        baixar o arquivo jdk.rar
         enviar para a pasta /tmp jre-8u211-linux-x64.tar.gz com filezilla ou outro        
         cd /tmp
 	tar -xvzf jre-8u211-linux-x64.tar.gz        
