@@ -1,13 +1,16 @@
      ############################Tutorial para Instalação da CSP######################### 
         apt-get update
         apt-get install python-software-properties software-properties-common
-        apt-get install default-jdk -y
+	apt-get install -y software-properties-common  (18)
+	apt-get install default-jdk -y
         apt-get update
         apt-get install ant subversion        
         baixar o arquivo "www...................!!!!!!!!!"
         enviar para a pasta /tmp jre-8u211-linux-x64.tar.gz com filezilla ou outro        
         cd /tmp
-	tar -xvzf jre-8u211-linux-x64.tar.gz        
+	tar -xvzf jre-8u211-linux-x64.tar.gz   
+        tar -zxvf ****
+
 	mv o jre**** /  jre-oracle
         sudo mv jre-oracle/ /usr/lib
         sudo update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jre-oracle/bin/java" 1
@@ -22,6 +25,15 @@
           selecione  ------------------------------------------------------------
     jdk ==> * 0       /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      auto mode
           1       /usr/lib/jre-oracle/bin/java                     1         manual mode
+          2       /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      manual mode 
+	   
+	   ant tar-app
+	   update-alternatives --config java
+	   
+       Selection         Path                                            Priority   Status
+          selecione  ------------------------------------------------------------
+          0       /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      auto mode
+     jdk ==> *  1       /usr/lib/jre-oracle/bin/java                     1         manual mode
           2       /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      manual mode 
 	
         ant tar-app
