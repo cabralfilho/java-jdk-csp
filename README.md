@@ -1,71 +1,25 @@
-     ############################Tutorial para Instalação da CSP######################### 
-        apt-get update
-        apt-get install python-software-properties software-properties-common
-	apt-get install -y software-properties-common  (18)
-	apt-get install default-jdk -y
-        apt-get update
-        apt-get install ant subversion        
-        baixar o arquivo "www...................!!!!!!!!!"
-        enviar para a pasta /tmp jre-8u211-linux-x64.tar.gz com filezilla ou outro        
-        cd /tmp
-	tar -xvzf jre-8u211-linux-x64.tar.gz   
-        tar -zxvf ****
+<p align="center">
+  <img src="https://img.shields.io/badge/Oracle-JRE%208u451-red?style=for-the-badge&logo=java&logoColor=white" alt="Java 8u451" />
+  <img src="https://img.shields.io/badge/Ubuntu-20.04%20%7C%2022.04%20%7C%2024.04-E95420?style=for-the-badge&logo=ubuntu&logoColor=white" alt="Ubuntu" />
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="MIT License" />
+  <br><br>
+  <h1>🔥 Oracle JRE 8u451 + CardServProxy (CSP) Installer 🔥</h1>
+  <p><strong>One-click legacy setup for CSP on Ubuntu servers</strong></p>
+  <p>Created with ❤️ by <strong>Fabiano</strong> (@Fabiano) • January 2026</p>
+</p>
 
-	mv o jre**** /  jre-oracle
-        sudo mv jre-oracle/ /usr/lib
-        sudo update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jre-oracle/bin/java" 1
-        sudo update-alternatives --set java /usr/lib/jre-oracle/bin/java        
-        cd /lib
-	mkdir cspsvn
-	cd cspsvn
-	svn co http://streamboard.tv/svn/CSP/trunk CSP-svn
-	cd CSP-svn
-        update-alternatives --config java
-       Selection         Path                                            Priority   Status
-          selecione  ------------------------------------------------------------
-    jdk ==> * 0       /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      auto mode
-          1       /usr/lib/jre-oracle/bin/java                     1         manual mode
-          2       /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      manual mode 
-	   
-	   ant tar-app
-	   update-alternatives --config java
-	   
-       Selection         Path                                            Priority   Status
-          selecione  ------------------------------------------------------------
-          0       /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      auto mode
-     jdk ==> *  1       /usr/lib/jre-oracle/bin/java                     1         manual mode
-          2       /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      manual mode 
-	
-        ant tar-app
-        update-alternatives --config java
-      Selection        Path                                            Priority   Status
-         selecione     ------------------------------------------------------------
-              0   /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      auto mode
-    jre ==> * 1   /usr/lib/jre-oracle/bin/java                     1         manual mode
-              2   /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      manual mode        
+<p align="center">
+  <img src="https://img.shields.io/github/stars/YOUR_USERNAME/csp-installer?style=social" alt="GitHub Stars">
+  <img src="https://img.shields.io/github/forks/YOUR_USERNAME/csp-installer?style=social" alt="Forks">
+</p>
 
-        cd /dist
-	
-	tar -zxvf cardservproxy.tar.gz
-	mv cardservproxy /usr/local/csp
-	rm -rf /usr/local/csp/*
-	cd /usr/local/
-	git clone https://github.com/cabralfilho/java-jdk-csp.git
-	cd  java-jdk-csp
-	tar -zxvf csp.tar.gz
+---
 
-    nano /etc/rc.local
-    Linhas para inclusão no arquivo rc.local	
+### 🌟 What is this?
 
-	cd /usr/local/csp
-	./cardproxy.sh start
-	chown root:syslog /var/log
-	exit 0
-	
-      Salve o arquivo utilizando "ctrl+x"
+A **powerful, idempotent Bash script** that installs **Oracle Java 8u451** (HotSpot VM) + **CardServProxy (CSP)** automatically on Ubuntu servers.
 
-      Inicializando a CSP, execute os comandos abaixo na ordem
+Perfect for legacy card-sharing environments that **require the original Oracle/Sun VM** (bypassing the classic "Unsupported java vm" error).
 
-	cd /usr/local/csp
-       
-	./cardproxy.sh start
+```text
+Legacy Java + CSP made easy in 2026!
