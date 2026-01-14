@@ -1,0 +1,249 @@
+#!/bin/bash
+# =============================================================================
+# install-java-csp.sh
+# Automatic installation of Oracle JRE 8u451 + CardServProxy (CSP)
+# For Ubuntu 20.04 / 22.04 / 24.04
+#
+# Created by: Fabiano (2026)
+# Contact: @Fabiano on X (Twitter)
+# Purpose: Simplify setup of legacy CSP environment with Oracle Java on VPS
+#
+# Prerequisites:
+#   - Run as root/sudo
+#   - jre-8u451-linux-x64.tar.gz must be placed in /tmp
+#   - Internet access to clone https://github.com/cabralfilho/java-jdk-csp
+#
+# Usage:
+#   chmod +x install-java-csp.sh
+#   sudo ./install-java-csp.sh
+# =============================================================================
+
+set -euo pipefail
+
+echo "============================================================="
+echo " Oracle JRE 8u451 + CardServProxy (CSP) Installer"
+echo " Created by: Fabiano (2026)"
+echo " Date: January 2026"
+echo " Running as: $(whoami)"
+echo " Expected JRE file: /tmp/jre-8u451-linux-x64.tar.gz"
+echo "============================================================="
+echo ""
+
+# Check if running as root
+if [ "$EUID" -ne 0 ]; then
+    echo "ERROR: This script must be run with sudo!"
+    exit 1
+fi
+
+# Variables
+JAVA_FILE="/tmp/jre-8u451-linux-x64.tar.gz"
+JAVA_DIR="/usr/lib/jvm"
+JAVA_HOME_TARGET="${JAVA_DIR}/jre-8u451-oracle"
+EXTRACTED_DIR="jre1.8.0_451"
+CSP_REPO_DIR="/usr/local/java-jdk-csp"
+CSP_DIR="/usr/local/csp"
+REPO_URL="https://github.com/cabralfilho/java-jdk-csp.git"
+
+# 1. Update system and install dependencies
+echo "[1/6] Updating system and installing dependencies..."
+apt update -y
+apt install -y wget tar git ant software-properties-common
+
+# 2. Install Java (idempotent)
+if [ -d "$JAVA_HOME_TARGET" ] && [ -x "$JAVA_HOME_TARGET/bin/java" ]; then
+    echo "[INFO] Java 8u451 is already installed at $JAVA_HOME_TARGET"
+else
+    if [ ! -f "$JAVA_FILE" ]; then
+        echo "ERROR: $JAVA_FILE not found in /tmp!"
+        echo "Download from: https://www.oracle.com/java/technologies/javase/javase8u211-later-archive-downloads.html"
+        exit 1
+    fi
+
+    echo "[2/6] Extracting JRE..."
+    cd /tmp
+    tar -zxvf "$JAVA_FILE"
+
+    if [ ! -d "$EXTRACTED_DIR" ]; then
+        echo "ERROR: Expected folder '$EXTRACTED_DIR' not found after extraction!"
+        exit 1
+    fi
+
+    echo "[3/6] Moving to $JAVA_HOME_TARGET..."
+    mv "$EXTRACTED_DIR" "$JAVA_HOME_TARGET"
+fi
+
+# 3. Configure update-alternatives
+echo "[4/6] Configuring java alternative..."
+update-alternatives --install /usr/bin/java java "${JAVA_HOME_TARGET}/bin/java" 100 || true
+update-alternatives --install /usr/bin/javaws javaws "${JAVA_HOME_TARGET}/bin/javaws" 100 || true
+
+echo ""
+echo "Select the Oracle 8u451 version (enter the corresponding number):"
+update-alternatives --config java || echo "[INFO] Only one version available."
+
+# 4. Set JAVA_HOME globally
+if ! grep -q "JAVA_HOME=${JAVA_HOME_TARGET}" /etc/environment; then
+    echo "[5/6] Setting JAVA_HOME permanently..."
+    {
+        echo "export JAVA_HOME=${JAVA_HOME_TARGET}"
+        echo "export PATH=\$PATH:\$JAVA_HOME/bin"
+    } >> /etc/environment
+fi
+
+# 5. Clone/update CSP repository
+echo "[6/6] Cloning/updating CSP repository..."
+mkdir -p /usr/local
+cd /usr/local || exit 1
+
+if [ -d "java-jdk-csp" ]; then
+    cd java-jdk-csp && git pull --ff-only || true
+else
+    git clone "${REPO_URL}"
+fi
+
+# 6. Extract csp.tar.gz if present
+cd "${CSP_REPO_DIR}" || exit 1
+if [ -f "csp.tar.gz" ]; then
+    echo "[+] Extracting csp.tar.gz..."
+    mkdir -p "${CSP_DIR}"
+    tar -zxvf csp.tar.gz -C "${CSP_DIR}"
+else
+    echo "[WARNING] csp.tar.gz not found in repository."
+fi
+
+# 7. Create systemd service
+echo "[+] Creating systemd service for CSP..."
+cat > /etc/systemd/system/csp.service <<'EOF'
+[Unit]
+Description=CardServProxy (CSP)
+After=network.target
+
+[Service]
+WorkingDirectory=/usr/local/csp
+ExecStart=/usr/local/csp/cardproxy.sh start
+ExecStop=/usr/local/csp/cardproxy.sh stop
+Restart=always
+User=root
+TimeoutStartSec=60
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable csp.service --now || true
+
+# Final message
+echo ""
+echo "============================================================="
+echo " INSTALLATION COMPLETED!"
+echo " Created by: Fabiano"
+echo ""
+echo "Useful commands:"
+echo "  java -version"
+echo "  systemctl status csp"
+echo "  tail -f /usr/local/csp/log/cardserv-sysout.log"
+echo ""
+echo "If you see 'Unsupported java vm':"
+echo "  Edit /usr/local/csp/cardproxy.sh"
+echo "  and ensure JVM_PARAMS includes:"
+echo "  -Dcom.bowman.cardserv.allowanyjvm=true"
+echo ""
+echo "Good luck! 🚀"
+echo "============================================================="
+
+# =============================================================================
+# CONTENT FOR README.md (copy and paste into a separate README.md file)
+# =============================================================================
+#
+# # Oracle JRE 8u451 + CardServProxy (CSP) Installer
+#
+# [![Ubuntu](https://img.shields.io/badge/Ubuntu-20.04%20%7C%2022.04%20%7C%2024.04-E95420?style=flat&logo=ubuntu&logoColor=white)](https://ubuntu.com)
+# [![Java 8u451](https://img.shields.io/badge/Java-Oracle%208u451-red?style=flat&logo=java&logoColor=white)](https://www.oracle.com/java/)
+# [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+#
+# **Created by: Fabiano** (@Fabiano on X/Twitter) – January 2026
+#
+# Automatic installation script for **Oracle Java Runtime Environment 8u451** + **CardServProxy (CSP)** on Ubuntu servers.
+#
+# > **Important Notice**:
+# > CardServProxy is **legacy software** (~2007–2013).  
+# > Use at your own risk. Consider migrating to modern solutions when possible.
+#
+# ## Features
+#
+# - Idempotent Oracle JRE 8u451 installation
+# - Automatic configuration of `update-alternatives` and `JAVA_HOME`
+# - Clone/update of https://github.com/cabralfilho/java-jdk-csp repository
+# - Extraction of `csp.tar.gz` (if present)
+# - Creation of systemd service for CSP
+#
+# ## Prerequisites
+#
+# - Ubuntu 20.04 / 22.04 / 24.04 (64-bit)
+# - Root/sudo access
+# - `jre-8u451-linux-x64.tar.gz` placed in `/tmp`
+#   - Download manually from:  
+#     https://www.oracle.com/java/technologies/javase/javase8u211-later-archive-downloads.html  
+#     (Java SE Runtime Environment 8u451 – Linux x64 Compressed Archive)  
+#     → Accept OTN license and log in with a free Oracle account
+# - Internet connection
+#
+# ## How to Use
+#
+# 1. Place the JRE file in /tmp:
+#    ```bash
+#    mv ~/Downloads/jre-8u451-linux-x64.tar.gz /tmp/
+#    ```
+#
+# 2. Download and run the script:
+#    ```bash
+#    wget https://raw.githubusercontent.com/YOUR_USERNAME/csp-installer/main/install-java-csp.sh
+#    chmod +x install-java-csp.sh
+#    sudo ./install-java-csp.sh
+#    ```
+#
+# ## After Installation
+#
+# - Check Java version:
+#   ```bash
+#   java -version
+#   ```
+#
+# - Start the service:
+#   ```bash
+#   sudo systemctl start csp
+#   sudo systemctl status csp
+#   ```
+#
+# - Or manually:
+#   ```bash
+#   cd /usr/local/csp
+#   ./cardproxy.sh start
+#   ```
+#
+# - Logs:
+#   ```bash
+#   tail -f /usr/local/csp/log/cardserv-sysout.log
+#   journalctl -u csp -f
+#   ```
+#
+# ## Common Issues & Fixes
+#
+# | Issue                                 | Fix                                                                    |
+# |---------------------------------------|------------------------------------------------------------------------|
+# | "Unsupported java vm"                 | Edit `/usr/local/csp/cardproxy.sh` and add `-Dcom.bowman.cardserv.allowanyjvm=true` to `JVM_PARAMS` |
+# | Still using OpenJDK                   | Run `sudo update-alternatives --config java` → select Oracle version  |
+# | csp.tar.gz not found                  | Check cloned repository or download manually                           |
+#
+# ## Contributing
+#
+# Issues and Pull Requests are welcome!  
+# Suggestions: support for other Java versions (e.g. 8u211), systemd improvements, etc.
+#
+# ## License
+#
+# MIT License – feel free to use, modify, and distribute.
+#
+# Made with ❤️ by Fabiano for the Brazilian legacy systems community.  
+# Good luck with your server! 🚀
